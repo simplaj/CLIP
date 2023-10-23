@@ -2,7 +2,6 @@ import os
 from PIL import Image
 import clip
 import torch
-from torchvision.datasets import CIFAR100
 
 
 def load_image(dir_path, preprocess, device):
@@ -15,14 +14,6 @@ def load_image(dir_path, preprocess, device):
         ims.append(im)
     ims = torch.stack(ims, dim=0)
     return ims, names
-
-
-def pre_inputs():
-    '''
-    Prepare the inputs
-    '''
-    image_input = preprocess(image).unsqueeze(0).to(device)
-    text_inputs = torch.cat([clip.tokenize(f"a photo of a {c}") for c in cifar100.classes]).to(device)
 
 
 def cal_im_f(im, model):
