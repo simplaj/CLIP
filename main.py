@@ -14,11 +14,11 @@ def load_image(dir_path, preprocess, device):
     paths = [os.path.join(dir_path, x) for x in names]
     ims = []
     for im_path in paths:
-        im = Image.open(im_Path)
+        im = Image.open(im_path)
         im = preprocess(im)
         ims.append(im)
     ims = torch.stack(ims, dim=0)
-    print(ims.shape)
+    return ims
 
 # Download the dataset
 
