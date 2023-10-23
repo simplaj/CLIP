@@ -5,8 +5,6 @@ import torch
 from torchvision.datasets import CIFAR100
 
 
-
-
 def load_image(dir_path, preprocess, device):
     names = os.listdir(dir_path)
     paths = [os.path.join(dir_path, x) for x in names]
