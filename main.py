@@ -35,7 +35,8 @@ def cal_im_f(im, model):
     
     '''
     with torch.no_grad():
-        image_features = model.encode_image(image_input)
+        image_features = model.encode_image(im)
+    return image_features
 
 
 def cal_text_f(im, model):
@@ -69,4 +70,6 @@ def print_res():
         
 if __name__ == '__main__':
     dir_name = './images'
-    load_image(dir_name, preprocess, device)
+    im_t = load_image(dir_name, preprocess, device)
+    im_f = cal_im_f(im_t, model)
+    print(im_f.shape)
