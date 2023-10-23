@@ -1,3 +1,7 @@
+'''
+An image search app based on CLIP
+author: tzh
+'''
 import os
 from PIL import Image
 import clip
