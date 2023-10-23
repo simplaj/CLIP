@@ -52,7 +52,7 @@ def pick_topk(image_features, text_features):
     '''
     image_features /= image_features.norm(dim=-1, keepdim=True)
     text_features /= text_features.norm(dim=-1, keepdim=True)
-    similarity = (100.0 * image_features @ text_features.T).softmax(dim=-1)
+    similarity = (100.0 * text_features @ image_features.T).softmax(dim=-1)
     values, indices = similarity[0].topk(5)
     return values, indices
 
