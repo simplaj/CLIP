@@ -1,5 +1,5 @@
 # CLIP
-HW of Computer Vison, AI school, NKU
+HW of Computer Vision, AI school, NKU
 ## Install
 Follow the install in [openai CLIP](https://github.com/openai/CLIP)
 ## Usage
