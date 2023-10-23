@@ -3,6 +3,11 @@ HW of Computer Vison
 ## Install
 Follow the install in [openai CLIP](https://github.com/openai/CLIP)
 ## Usage
+0. clone the repo.
+```
+git clone https://github.com/simplaj/CLIP.git
+cd CLIP
+```
 1. creat a dir to put your image wanted to be searched
 ```
 mkdir images
