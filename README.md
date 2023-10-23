@@ -9,6 +9,9 @@ mkdir images
 ```
 2. run the script
 ```
-python main
+python main.py
 ```
 3. input your query(attetion it should be expressed in english)
+```
+input the query:
+```
