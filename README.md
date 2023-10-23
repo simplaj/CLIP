@@ -15,3 +15,10 @@ python main.py
 ```
 input the query:
 ```
+### Example
+#### a photo of sky
+![a photo of sky](./a_photo_of_sky.png)
+#### a photo of grass
+![a photo of grass](./a_photo_of_grass.png)
+#### a photo of a man stand in front of the blackborad
+![a photo of a man stand in front of the blackborad](./a_photo_of_a_man_stand_in_front_of_the_blackborad.png)
