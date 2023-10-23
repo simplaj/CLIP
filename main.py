@@ -20,28 +20,48 @@ def load_image(dir_path, preprocess, device):
     ims = torch.stack(ims, dim=0)
     return ims
 
-# Download the dataset
 
-# Prepare the inputs
 def pre_inputs():
+    '''
+    Prepare the inputs
+    '''
     image_input = preprocess(image).unsqueeze(0).to(device)
     text_inputs = torch.cat([clip.tokenize(f"a photo of a {c}") for c in cifar100.classes]).to(device)
 
-# Calculate features
-def cal_f():
+
+def cal_im_f(im, model):
+    '''
+    Calculate features
+    
+    '''
     with torch.no_grad():
         image_features = model.encode_image(image_input)
-        text_features = model.encode_text(text_inputs)
 
-# Pick the top 5 most similar labels for the image
+
+def cal_text_f(im, model):
+    '''
+    Calculate features
+    
+    '''
+    with torch.no_grad():
+        image_features = model.encode_image(image_input)
+
+
 def pick_topk():
+    '''
+    Pick the top 5 most similar labels for the image
+    
+    '''
     image_features /= image_features.norm(dim=-1, keepdim=True)
     text_features /= text_features.norm(dim=-1, keepdim=True)
     similarity = (100.0 * image_features @ text_features.T).softmax(dim=-1)
     values, indices = similarity[0].topk(5)
 
-# Print the result
+
 def print_res():
+    '''
+    Print the result
+    '''
     print("\nTop predictions:\n")
     for value, index in zip(values, indices):
         print(f"{cifar100.classes[index]:>16s}: {100 * value.item():.2f}%")
