@@ -3,7 +3,8 @@ import clip
 import torch
 
 import numpy as np
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
@@ -38,10 +39,16 @@ train_features, train_labels = get_features(train)
 test_features, test_labels = get_features(test)
 
 # Perform logistic regression
-classifier = LogisticRegression(random_state=0, C=0.316, max_iter=1000, verbose=1)
-classifier.fit(train_features, train_labels)
+base_classifier = DecisionTreeClassifier(max_depth=1)
+adaboost = AdaBoostClassifier(base_estimator=base_classifier, n_estimators=50, random_state=42)
+
+# 训练Adaboost分类器
+adaboost.fit(train_features, train_labels)
+
+# 预测并计算准确率
+predictions = adaboost.predict(test_features)
 
 # Evaluate using the logistic regression classifier
-predictions = classifier.predict(test_features)
+predictions = adaboost.predict(test_features)
 accuracy = np.mean((test_labels == predictions).astype(float)) * 100.
 print(f"Accuracy = {accuracy:.3f}")
