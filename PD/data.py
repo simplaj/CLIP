@@ -25,7 +25,10 @@ class Angle(torch.utils.data.Dataset):
     def __getitem__(self, index):
         path = self.paths[index]
         im = Image.open(path)
-        return self.preprocess(im), self.labels[index]
+        return {
+            'data': self.preprocess(im), 
+            'label': self.labels[index]
+        }
 
     def __len__(self):
         return len(self.labels)
