@@ -16,7 +16,7 @@ def load_image(dir_path, preprocess, device):
         im = Image.open(im_path)
         im = preprocess(im)
         ims.append(im)
-    ims = torch.stack(ims, dim=0)
+    ims = torch.stack(ims, dim=0).to(device)
     return ims, names
 
 
@@ -66,7 +66,7 @@ def process():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model, preprocess = clip.load('ViT-B/32', device)
     
-    dir_name = './images'
+    dir_name = './pd_img/health'
     im_t, im_names = load_image(dir_name, preprocess, device)
     im_f = cal_im_f(im_t, model)
     while True:
