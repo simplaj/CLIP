@@ -110,7 +110,7 @@ class Angle(torch.utils.data.Dataset):
         x_min = 0
         x_max = 10
         color_map = ['b', 'r']
-        fig, axs = plt.subplots(2, 1, figsize=(12, 8), facecolor='white')
+        fig, axs = plt.subplots(2, 1, figsize=(12, 8), facecolor='black')
         
         for ii, param_list in enumerate(data):
             for i in range(len(param_list)):
