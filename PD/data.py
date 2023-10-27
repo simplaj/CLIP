@@ -23,8 +23,8 @@ class Angle(torch.utils.data.Dataset):
         # self.gen_filename(labels[idx], names[idx])
 
     def __getitem__(self, index):
-        path_pair = self.paths[index]
-        im = self.concat_img(path_pair)
+        path = self.paths[index]
+        im = Image.open(path_pair)
         return self.preprocess(im), self.labels[index]
 
     def __len__(self):
