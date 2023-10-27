@@ -24,7 +24,7 @@ class Angle(torch.utils.data.Dataset):
 
     def __getitem__(self, index):
         path = self.paths[index]
-        im = Image.open(path_pair)
+        im = Image.open(path)
         return self.preprocess(im), self.labels[index]
 
     def __len__(self):
@@ -96,34 +96,35 @@ class Angle(torch.utils.data.Dataset):
         file_name_2 = os.path.basename(path_pair[2])
         name = file_name_0.split('_')[0]
         x, y = int(file_name_0.split('_')[1]), int(file_name_2.split('_')[1])
-        idxs = [2, 0]
-        data = []
-        if 'left' in path_pair[0]:
-            idxs = [0, 2]
-        for idx in idxs:
-            data.append([
-                np.load(path_pair[idx]),
-                np.load(path_pair[idx + 1])
-                ])
-        y_min = [0, 120]
-        y_max = [20, 180]
-        x_min = 0
-        x_max = 10
-        color_map = ['b', 'r']
-        fig, axs = plt.subplots(2, 1, figsize=(12, 8), facecolor='black')
-        
-        for ii, param_list in enumerate(data):
-            for i in range(len(param_list)):
-                param_x = np.arange(param_list[i].shape[0]) / 25
-                axs[i].axis('off')  # 关闭坐标轴
-                axs[i].set_facecolor('black')
-                axs[i].set_ylim(ymin = y_min[i], ymax = y_max[i])
-                axs[i].set_xlim(xmin = x_min, xmax = x_max)
-                axs[i].plot(param_x, param_list[i], c=color_map[ii])
         save_path = path_pair[0].replace(file_name_0, f'{name}_{x}_{y}.jpg')
+        if not os.path.exists(save_path):
+            idxs = [2, 0]
+            data = []
+            if 'left' in path_pair[0]:
+                idxs = [0, 2]
+            for idx in idxs:
+                data.append([
+                    np.load(path_pair[idx]),
+                    np.load(path_pair[idx + 1])
+                    ])
+            y_min = [0, 120]
+            y_max = [20, 180]
+            x_min = 0
+            x_max = 10
+            color_map = ['b', 'r']
+            fig, axs = plt.subplots(2, 1, figsize=(12, 8), facecolor='black')
+            
+            for ii, param_list in enumerate(data):
+                for i in range(len(param_list)):
+                    param_x = np.arange(param_list[i].shape[0]) / 25
+                    axs[i].axis('off')  # 关闭坐标轴
+                    axs[i].set_facecolor('black')
+                    axs[i].set_ylim(ymin = y_min[i], ymax = y_max[i])
+                    axs[i].set_xlim(xmin = x_min, xmax = x_max)
+                    axs[i].plot(param_x, param_list[i], c=color_map[ii])
+            plt.savefig(save_path, bbox_inches='tight', pad_inches=0.0)
+            plt.close()
         self.paths.append(save_path)
-        plt.savefig(save_path, bbox_inches='tight', pad_inches=0.0)
-        plt.close()
 
     def process(self):
         for path_pair in self.pairs:
