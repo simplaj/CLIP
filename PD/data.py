@@ -12,6 +12,7 @@ class Angle(torch.utils.data.Dataset):
     def __init__(self, mode, preprocess):
         super(Angle, self).__init__()
         self.preprocess = preprocess
+        self.paths = []
         data = np.load('PD_43.npy', allow_pickle=True)
         labels = data[:, 0]
         names = data[:, 1]
@@ -120,6 +121,7 @@ class Angle(torch.utils.data.Dataset):
                 axs[i].set_xlim(xmin = x_min, xmax = x_max)
                 axs[i].plot(param_x, param_list[i], c=color_map[ii])
         save_path = path_pair[0].replace(file_name_0, f'{name}_{x}_{y}.jpg')
+        self.paths.append(save_path)
         plt.savefig(save_path, bbox_inches='tight', pad_inches=0.0)
         plt.close()
 
@@ -129,4 +131,4 @@ class Angle(torch.utils.data.Dataset):
 
 
 if __name__ == '__main__':
-    angle = Angle(mode='train', preprocess=None)
+    angle = Angle(mode='test', preprocess=None)
