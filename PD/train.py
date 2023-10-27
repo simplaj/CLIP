@@ -1,8 +1,14 @@
 import torch
+import wandb
+import torch.nn as nn
 from torch.utils.data import random_split
+from torchvision.models import mobilenet_v2, MobileNet_V2_Weights
+from torchvision import transforms
 
 from parse import args
 from data import Angle
+from scheduler import WarmupCosineLR
+from utils import cal_acc_recall
 
 
 def train(model, dataloader, testloader, cfg):
@@ -51,7 +57,7 @@ def train(model, dataloader, testloader, cfg):
             loss_all.append(loss)
             
         eval_acc = gp_evaluate(model, testloader, cfg)
-        torch.save(model, cfg.path + f'/GPR_{epoch}.pth')
+        torch.save(model, cfg.path + f'/M1027_{epoch}.pth')
         scheduler.step()
         train_lr = optimizer.param_groups[0]['lr']
         status = {'train_loss': sum(loss_all) / len(loss_all),
@@ -64,10 +70,27 @@ def train(model, dataloader, testloader, cfg):
         wandb.log(status)
         
 
+def gp_evaluate(model, dataloader, cfg):
+    model.eval()
+    device = cfg.device
+    model = model.to(device)
+    preds = []
+    labels = []
+    for b, datas in enumerate(dataloader):
+        data = datas['data'].to(device)
+        label = datas['label'].to(device)
+        with torch.no_grad():
+            pred = model(data)
+        preds.append(pred)
+        labels.append(label)
+    acc, _ = cal_acc_recall(torch.cat(preds, dim=0), torch.cat(labels, dim=0), 3)
+    return acc
+
+
 class M1027(nn.Module):
     """Some Information about GPR"""
     def __init__(self, num_classes):
-        super(GPR, self).__init__()
+        super(M1027, self).__init__()
         self.features = mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT).features
         self.classifier = nn.Sequential(
             nn.Dropout(p=0.2),
@@ -94,4 +117,12 @@ if __name__ == '__main__':
     ])
     if cfg.mode == 'train':
         dataset = Angle(mode='train', preprocess=preprocess)
-        train(model, dataloader, testloader, cfg)
+        len_set = len(dataset)
+        len_train = int(0.7 * len_set)
+        train_dataset, val_dataset = random_split(
+            dataset=dataset,
+            lengths=[len_train, len_set - len_train]
+        )
+        dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=32, shuffle=True)
+        valloader = torch.utils.data.DataLoader(val_dataset, batch_size=32, shuffle=False)
+        train(model, dataloader, valloader, cfg)
